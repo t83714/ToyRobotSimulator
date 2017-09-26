@@ -4,7 +4,7 @@
   "description": "A Cli application simulates toy robot moving on a square tabletop",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha -r @std/esm"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/t83714/ToyRobotSimulator#readme",
   "dependencies": {
+    "@std/esm": "^0.11.0",
     "chalk": "^2.1.0",
     "meow": "^3.7.0"
   },
@@ -35,5 +36,6 @@
     "chai": "^4.1.2",
     "mocha": "^3.5.3",
     "node-cmd": "^3.0.0"
-  }
+  },
+  "@std/esm": { "esm":"all", "cjs":true }
 }
