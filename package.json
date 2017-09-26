@@ -1,0 +1,39 @@
+{
+  "name": "toyrobotsimulator",
+  "version": "1.0.0",
+  "description": "A Cli application simulates toy robot moving on a square tabletop",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/t83714/ToyRobotSimulator.git"
+  },
+  "bin": {
+    "trs": "./bin/trs.js"
+  },
+  "engines": {
+    "node": ">=8.4.0"
+  },
+  "keywords": [
+    "Node",
+    "CLI",
+    "Simulation"
+  ],
+  "author": "Jacky Jiang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/t83714/ToyRobotSimulator/issues"
+  },
+  "homepage": "https://github.com/t83714/ToyRobotSimulator#readme",
+  "dependencies": {
+    "chalk": "^2.1.0",
+    "meow": "^3.7.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^3.5.3",
+    "node-cmd": "^3.0.0"
+  }
+}
