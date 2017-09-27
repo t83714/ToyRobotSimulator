@@ -30,12 +30,16 @@
   "dependencies": {
     "@std/esm": "^0.11.0",
     "chalk": "^2.1.0",
-    "meow": "^3.7.0"
+    "meow": "^3.7.0",
+    "vorpal": "^1.12.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^3.5.3",
     "node-cmd": "^3.0.0"
   },
-  "@std/esm": { "esm":"all", "cjs":true }
+  "@std/esm": {
+    "esm": "all",
+    "cjs": true
+  }
 }

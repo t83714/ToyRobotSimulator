@@ -23,10 +23,10 @@ class Robot{
     }
 
     place(tabletop,x,y,f){
-        if(!tabletop) return;
-        if(!x) return;
-        if(!y) return;
-        if(tabletop.isOutOfBoundary(x,y)) return;
+        if(!tabletop) throw new Error("Invalid tabletop parameter!");
+        if(!x) throw new Error("Invalid x parameter!");
+        if(!y) throw new Error("Invalid y parameter!");
+        if(tabletop.isOutOfBoundary(x,y)) throw new Error(`${x},${y} is out of tabletop boundary!`);
         this.tabletop=tabletop;
         this.x=x;
         this.y=y;
