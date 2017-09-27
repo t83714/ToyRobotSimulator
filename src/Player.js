@@ -3,10 +3,11 @@ class Player{
     constructor(eventBus,RobotClass,TabletopClass,w=5,h=5){
         if(!eventBus) throw new Error("Invalid empty eventBus parameter!");
         if(!RobotClass) throw new Error("Invalid empty RobotClass parameter!");
-        this.RobotClass=RobotClass;
-        this.tabletop=null;
-        this.robot=null;
-        this.createTabletop(TabletopClass,w,h);
+        if(!TabletopClass) throw new Error("Invalid empty TabletopClass parameter!");
+        
+        this.tabletop=new TabletopClass(w,h);
+        this.robot=new RobotClass();
+
         eventBus.on('cmd',this.commandListener.bind(this));
     }
 
@@ -21,36 +22,10 @@ class Player{
         this.robot=new this.RobotClass(w,h);
     }
 
-    commandListener(cmd,x,y,f){
-        switch(cmd){
-            case "PLACE" : this.executeCmdPlace(x,y,f);break;
-            case "MOVE" : this.executeCmdMove();break;
-        }
+    commandListener(cmdType,command,payload){
+        if(!payload) payload=null;
+        command.execute(this.robot,this.tabletop,payload);
     }
-
-    executeCmdPlace(x,y,f){
-        if(!this.robot){
-            this.createRobot();
-        }
-        this.robot.setFacing(f);
-        this.robot.setTabletop(this.tabletop);
-        this.robot.x=x;
-        this.robot.y=y;
-        this.tabletop.place(this.robot,x,y);
-    }
-
-    executeCmdMove(){
-        if(!this.robot){
-            return;
-        }
-        this.robot.move();
-        this.tabletop.place(this.robot,x,y);
-    }
-
-
-
-
-
-
-
 }
+
+export default Player;

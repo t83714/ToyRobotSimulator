@@ -1,16 +1,18 @@
-import * as FacingOptions from './FacingOptions.js';
+import * as FacingOptions from "./FacingOptions.js";
+import chalk from "chalk";
 
 class Robot{
 
-    constructor(eventBus,facing){
-        if(!eventBus) throw new Error('Invalid empty eventBus parameter!');
-        this.eventBus=eventBus;
+    constructor(facing){
         this.facing=null;
         this.tabletop=null;
         this.x=null;
         this.y=null;
         if(facing) this.setFacing(facing);
-        eventBus.addListener.on();
+    }
+
+    isOnTabletop(){
+        return this.tabletop?true:false;
     }
 
     setFacing(f){
@@ -21,9 +23,10 @@ class Robot{
     }
 
     place(tabletop,x,y,f){
-        if(!tabletop) throw new Error("Invalid empty tabletop parameter!");
-        if(!x) throw new Error("Invalid empty tabletop x!");
-        if(!y) throw new Error("Invalid empty tabletop y!");
+        if(!tabletop) return;
+        if(!x) return;
+        if(!y) return;
+        if(tabletop.isOutOfBoundary(x,y)) return;
         this.tabletop=tabletop;
         this.x=x;
         this.y=y;
@@ -31,6 +34,7 @@ class Robot{
     }
 
     left(){
+        if(!this.isOnTabletop()) return;
         if(!this.facing) return;
         let degree=this.facingToDegree(this.facing);
         degree-=90;
@@ -38,6 +42,7 @@ class Robot{
     }
 
     right(){
+        if(!this.isOnTabletop()) return;
         if(!this.facing) return;
         let degree=this.facingToDegree(this.facing);
         degree+=90;
@@ -45,11 +50,20 @@ class Robot{
     }
 
     move(){
+        if(!this.isOnTabletop()) return;
         let [dx,dy]=FacingOptions.getFacingMoment(this.facing);
         let nx=this.x+dx;
         let ny=this.y+dy;
         if(this.tabletop.isOutOfBoundary(nx,ny)) return;
-        //-- todo to complete
+        this.x=nx;
+        this.y=ny;
+    }
+
+    report(){
+        if(!this.isOnTabletop()) return;
+        console.log(chalk.green(`Output: ${this.x},${this.y},${this.facing}\n`));
     }
 }
 Robot.facingOptions={}["WEST","NORTH","EAST","SOUTH"];
+
+export default Robot;
