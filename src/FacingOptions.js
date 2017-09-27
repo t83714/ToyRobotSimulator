@@ -18,7 +18,7 @@ const FacingOptions={
 };
 
 export let degreeToFacing=function(degree){
-    let rDegree=degree%360;
+    let rDegree=(degree+360)%360;
     for(let f in FacingOptions){
         if(rDegree==FacingOptions[f].degree) return f;
     }

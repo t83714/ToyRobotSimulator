@@ -12,6 +12,17 @@ const player=new Player(eventBus,Robot,Tabletop);
 eventBus.on('output',function(output){
     console.log(chalk.green(`Output:${output}`));
 });
+
+function parseIntNumber(v){
+    try{
+        v=parseInt(v);
+        if(isNaN(v)) return 0;
+        return v;
+    }catch(e){
+        return 0;
+    }
+}
+
 const cli=new vorpal();
 cli.command("PLACE <x,y,facing>")
     .description("Place robot on x,y position of tabletop with <facing>")
@@ -20,8 +31,10 @@ cli.command("PLACE <x,y,facing>")
             let parts=args['x,y,facing'].split(',');
             if(parts.length!=3) throw new Error('Require parameter in x,y,facing format!');
             let [x,y,facing]=parts;
+            x=parseIntNumber(x);
+            y=parseIntNumber(y);
             facing=facing.toUpperCase();
-            commands.PLACE.send({
+            commands.PLACE().send({
                 x,
                 y,
                 facing
@@ -36,7 +49,7 @@ cli.command("MOVE")
     .description("Move robot one step further")
     .action(function(args, callback){
         try{
-            commands.MOVE.send();
+            commands.MOVE().send();
         }catch(e){
             console.log(chalk.red(`Error: ${e.message}`));
             console.log(e);
@@ -48,7 +61,7 @@ cli.command("LEFT")
     .description("Make robot turn left")
     .action(function(args, callback){
         try{
-            commands.LEFT.send();
+            commands.LEFT().send();
         }catch(e){
             console.log(chalk.red(`Error: ${e.message}`));
         }
@@ -59,7 +72,7 @@ cli.command("RIGHT")
     .description("Make robot turn RIGHT")
     .action(function(args, callback){
         try{
-            commands.RIGHT.send();
+            commands.RIGHT().send();
         }catch(e){
             console.log(chalk.red(`Error: ${e.message}`));
         }
@@ -70,7 +83,7 @@ cli.command("REPORT")
     .description("Ask robot to report current position")
     .action(function(args, callback){
         try{
-            commands.REPORT.send();
+            commands.REPORT().send();
         }catch(e){
             console.log(chalk.red(`Error: ${e.message}`));
         }

@@ -35,17 +35,17 @@ class Robot{
     left(){
         if(!this.isOnTabletop()) return;
         if(!this.facing) return;
-        let degree=this.facingToDegree(this.facing);
+        let degree=FacingOptions.facingToDegree(this.facing);
         degree-=90;
-        this.facing=this.degreeToFacing(degree);
+        this.facing=FacingOptions.degreeToFacing(degree);
     }
 
     right(){
         if(!this.isOnTabletop()) return;
         if(!this.facing) return;
-        let degree=this.facingToDegree(this.facing);
+        let degree=FacingOptions.facingToDegree(this.facing);
         degree+=90;
-        this.facing=this.degreeToFacing(degree);
+        this.facing=FacingOptions.degreeToFacing(degree);
     }
 
     move(){
@@ -63,6 +63,5 @@ class Robot{
         this.eventBus.emit('output',`${this.x},${this.y},${this.facing}`);
     }
 }
-Robot.facingOptions={}["WEST","NORTH","EAST","SOUTH"];
 
 export default Robot;
