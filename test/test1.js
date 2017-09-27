@@ -7,6 +7,7 @@ import Robot from "../src/Robot.js";
 import Tabletop from "../src/Tabletop.js";
 
 const player=new Player(eventBus,Robot,Tabletop);
+let lastOutput=null;
 
 describe('Test Robot Command Sequence One', function() {
     it('PLACE 0,0,NORTH', function() {
@@ -21,11 +22,15 @@ describe('Test Robot Command Sequence One', function() {
         commands.MOVE.send();
     });
 
-    it('REPORT', function(done) {
+    it('REPORT',function(done) {
         eventBus.on('output',function(output){
-            assert.equal(output,'0,1,NORTH');
+            lastOutput=output;
             done();
         });
         commands.REPORT.send();
+    });
+
+    it('Output should be: 0,1,NORTH', function() {
+        assert.equal(lastOutput,'0,1,NORTH');
     });
 });
