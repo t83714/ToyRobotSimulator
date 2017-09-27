@@ -1,9 +1,10 @@
 import * as FacingOptions from "./FacingOptions.js";
-import chalk from "chalk";
 
 class Robot{
 
-    constructor(facing){
+    constructor(eventBus,facing){
+        if(!eventBus) throw new Error('Invalid empty eventBus parameter!');
+        this.eventBus=eventBus;
         this.facing=null;
         this.tabletop=null;
         this.x=null;
@@ -61,7 +62,7 @@ class Robot{
 
     report(){
         if(!this.isOnTabletop()) return;
-        console.log(chalk.green(`Output: ${this.x},${this.y},${this.facing}\n`));
+        eventBus.emit('output',`${this.x},${this.y},${this.facing}`);
     }
 }
 Robot.facingOptions={}["WEST","NORTH","EAST","SOUTH"];

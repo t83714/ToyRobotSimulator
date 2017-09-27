@@ -9,6 +9,9 @@ import Robot from "../src/Robot.js";
 import Tabletop from "../src/Tabletop.js";
 
 const player=new Player(eventBus,Robot,Tabletop);
+eventBus.on('output',function(output){
+    console.log(chalk.green(`Output:${output}`));
+});
 const cli=new vorpal();
 cli.command("PLACE <x,y,facing>")
     .description("Place robot on x,y position of tabletop with <facing>")
@@ -36,6 +39,7 @@ cli.command("MOVE")
             commands.MOVE.send();
         }catch(e){
             console.log(chalk.red(`Error: ${e.message}`));
+            console.log(e);
         }
         callback();
     });

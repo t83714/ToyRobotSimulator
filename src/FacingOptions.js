@@ -38,7 +38,7 @@ export let isValid=function(f){
     return false;
 };
 
-export let getFacingMoment=function(f){
+export let getFacingMoment=function(facing){
     if(!isValid(facing)) throw new Error('Invalid facing:'+facing);
     return FacingOptions[facing].movement;
 };
