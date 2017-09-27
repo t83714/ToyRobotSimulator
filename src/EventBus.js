@@ -1,9 +1,21 @@
 import EventEmitter from 'events';
 
-const emitter = new EventEmitter();
+let emitter;
 
-emitter.on('uncaughtException', function (err) {
-    console.log(chalk.red('uncaughtException: '+err.message));
-});
+function init(){
+    emitter = new EventEmitter();
+    
+    emitter.on('uncaughtException', function (err) {
+        console.log(chalk.red('uncaughtException: '+err.message));
+    });
+};
 
+init();
+
+export let reset=function(){
+    emitter.removeAllListeners('cmd');
+    emitter.removeAllListeners('output');
+    emitter=null;
+    init();
+};
 export default emitter;
