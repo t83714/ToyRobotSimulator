@@ -1,41 +1,85 @@
-import { assert } from 'chai';
-
+import {assert} from "chai";
+import EventEmitter from "events";
 import * as commands from "../src/commands";
 import Player from "../src/Player.js";
-import eventBus,{ reset as eventBusReset } from "../src/EventBus.js";
 import Robot from "../src/Robot.js";
 import Tabletop from "../src/Tabletop.js";
 
-eventBusReset();
+const eventBus=new EventEmitter();
+const player=new Player(eventBus, Robot, Tabletop);
 
-const player=new Player(eventBus,Robot,Tabletop);
-let lastOutput=null;
+describe("Test Robot Command Sequence Two", function() {
+    before(function() {
+        player.startToPlay();
+    });
 
-describe('Test Robot Command Sequence Two', function() {
-    
-    it('PLACE 0,0,NORTH', function() {
-        commands.PLACE().send({
-            x:0,
-            y:0,
-            facing:'NORTH'
+    after(function() {
+        player.stopToPlay();
+    });
+
+    describe("# Test Command: PLACE 1,2,SOUTH", function() {
+        it("should execute command without error", function(done) {
+            commands.place(eventBus, function(err) {
+                if (err) done(err);
+                else done();
+            }).send({
+                x: 1,
+                y: 2,
+                facing: "SOUTH",
+            });
+        });
+
+        it("should set robot x position to 1", function() {
+            assert.equal(player.robot.x, 1);
+        });
+
+        it("should set robot y position to 2", function() {
+            assert.equal(player.robot.y, 2);
+        });
+
+        it("should set robot facing to SOUTH", function() {
+            assert.equal(player.robot.facing, "SOUTH");
         });
     });
 
-    it('LEFT', function() {
-        commands.LEFT().send();
+    describe("# Test Command: Left", function() {
+        it("should execute command without error", function(done) {
+            commands.left(eventBus, function(err) {
+                if (err) done(err);
+                else done();
+            }).send();
+        });
+
+        it("should set robot x position to 1", function() {
+            assert.equal(player.robot.x, 1);
+        });
+
+        it("should set robot y position to 2", function() {
+            assert.equal(player.robot.y, 2);
+        });
+
+        it("should set robot facing to EAST", function() {
+            assert.equal(player.robot.facing, "EAST");
+        });
     });
 
-    it('REPORT',function(done) {
-        let callBack=function(output){
+    describe("# Test Command: Report", function() {
+        let lastOutput;
+        let callBack=function(output) {
             lastOutput=output;
-            done();
-            eventBus.removeListener('output',callBack);
-        }
-        eventBus.on('output',callBack);
-        commands.REPORT().send();
-    });
+            eventBus.removeListener("output", callBack);
+        };
+        eventBus.on("output", callBack);
 
-    it('Output should be: 0,0,WEST', function() {
-        assert.equal(lastOutput,'0,0,WEST');
+        it("should execute command without error", function(done) {
+            commands.report(eventBus, function(err) {
+                if (err) done(err);
+                else done();
+            }).send();
+        });
+
+        it("should output : 1,2,EAST", function() {
+            assert.equal(lastOutput, "1,2,EAST");
+        });
     });
 });

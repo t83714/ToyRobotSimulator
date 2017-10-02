@@ -1,97 +1,105 @@
 #!/usr/bin/env node -r @std/esm
 
 import chalk from "chalk";
-import vorpal from "vorpal";
+import Vorpal from "vorpal";
 import * as commands from "../src/commands";
 import Player from "../src/Player.js";
 import eventBus from "../src/EventBus.js";
 import Robot from "../src/Robot.js";
 import Tabletop from "../src/Tabletop.js";
 
-const player=new Player(eventBus,Robot,Tabletop);
-eventBus.on('output',function(output){
-    console.log(chalk.green(`Output:${output}`));
+const player=new Player(eventBus, Robot, Tabletop);
+player.startToPlay();
+
+eventBus.on("output", function(output) {
+    process.stdout.write(chalk.green("Output:"+output+"\n"));
 });
 
-function parseIntNumber(v){
-    try{
+/**
+ * Parse string to int; Will return 0 for invalid string format
+ * @param {*} v input string
+ * @return {number} parse result
+ */
+function parseIntNumber(v) {
+    try {
         v=parseInt(v);
-        if(isNaN(v)) return 0;
+        if (isNaN(v)) return 0;
         return v;
-    }catch(e){
+    } catch (e) {
         return 0;
     }
 }
 
-const cli=new vorpal();
+const cli=new Vorpal();
 cli.command("PLACE <x,y,facing>")
     .description("Place robot on x,y position of tabletop with <facing>")
-    .action(function(args, callback){
-        try{
-            let parts=args['x,y,facing'].split(',');
-            if(parts.length!=3) throw new Error('Require parameter in x,y,facing format!');
-            let [x,y,facing]=parts;
+    .action(function(args, callback) {
+        try {
+            let parts=args["x,y,facing"].split(",");
+            if (parts.length!=3) {
+                throw new Error("Require parameter in x,y,facing format!");
+            }
+            let [x, y, facing]=parts;
             x=parseIntNumber(x);
             y=parseIntNumber(y);
             facing=facing.toUpperCase();
-            commands.PLACE().send({
+            commands.place().send({
                 x,
                 y,
-                facing
+                facing,
             });
-        }catch(e){
-            console.log(chalk.red(`Error: ${e.message}`));
+        } catch (e) {
+            process.stdout.write(chalk.red("Error: "+e.message+"\n"));
         }
         callback();
     });
 
 cli.command("MOVE")
     .description("Move robot one step further")
-    .action(function(args, callback){
-        try{
-            commands.MOVE().send();
-        }catch(e){
-            console.log(chalk.red(`Error: ${e.message}`));
-            console.log(e);
+    .action(function(args, callback) {
+        try {
+            commands.move().send();
+        } catch (e) {
+            process.stdout.write(chalk.red("Error: "+e.message+"\n"));
         }
         callback();
     });
 
 cli.command("LEFT")
     .description("Make robot turn left")
-    .action(function(args, callback){
-        try{
-            commands.LEFT().send();
-        }catch(e){
-            console.log(chalk.red(`Error: ${e.message}`));
+    .action(function(args, callback) {
+        try {
+            commands.left().send();
+        } catch (e) {
+            process.stdout.write(chalk.red("Error: "+e.message+"\n"));
         }
         callback();
     });
 
 cli.command("RIGHT")
     .description("Make robot turn RIGHT")
-    .action(function(args, callback){
-        try{
-            commands.RIGHT().send();
-        }catch(e){
-            console.log(chalk.red(`Error: ${e.message}`));
+    .action(function(args, callback) {
+        try {
+            commands.right().send();
+        } catch (e) {
+            process.stdout.write(chalk.red("Error: "+e.message+"\n"));
         }
         callback();
     });
 
 cli.command("REPORT")
     .description("Ask robot to report current position")
-    .action(function(args, callback){
-        try{
-            commands.REPORT().send();
-        }catch(e){
-            console.log(chalk.red(`Error: ${e.message}`));
+    .action(function(args, callback) {
+        try {
+            commands.report(eventBus).send();
+        } catch (e) {
+            process.stdout.write(chalk.red("Error: "+e.message+"\n"));
         }
         callback();
     });
 
-cli.delimiter('RobotSimulation~$').show();
+cli.delimiter("RobotSimulation~$").show();
 
-process.on('uncaughtException', (err) => {
-    console.log(chalk.red('Error: '+err.message));
- });
+process.on("uncaughtException", (err) => {
+    process.stdout.write(chalk.red("Error: "+err.message+"\n"));
+});
